@@ -40,32 +40,10 @@ function handleGet($conn)
     }
 }
 
-function handlePost($conn) //3.0 new
-{
-    $input = json_decode(file_get_contents("php://input"), true);
-
-    try {
-        $result = createSubject($conn, $input['name']);
-        if ($result['inserted'] > 0) {
-            echo json_encode(["message" => "Materia creada correctamente"]);
-        } else {
-            http_response_code(400);
-            echo json_encode(["error" => "No se pudo crear la materia"]);
-        }
-    } catch (mysqli_sql_exception $e) {
-        // 🔹 Código 1062 = duplicado
-        if ($e->getCode() == 1062) {
-            http_response_code(400);
-            echo json_encode(["error" => "La materia ya existe."]);
-        } else {
-            http_response_code(500);
-            echo json_encode(["error" => "Error interno del servidor"]);
-        }
-    }
-}
 
 
-/*function handlePost($conn) //old 
+
+function handlePost($conn)  
 {
     $input = json_decode(file_get_contents("php://input"), true);
     
@@ -79,7 +57,7 @@ function handlePost($conn) //3.0 new
         http_response_code(500);
         echo json_encode(["error" => "Error al asignar"]);
     }
-}*/
+}
 
 function handlePut($conn) 
 {
