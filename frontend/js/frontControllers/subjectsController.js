@@ -96,12 +96,6 @@ function setupSubjectFormHandler() {
       name: document.getElementById('name').value.trim()
     };
 
-    // 🔹 Validación básica (vacío)
-    if (subject.name === '') {
-      alert('El nombre no puede estar vacío.');
-      return;
-    }
-
     try {
       // 🔹 1. Verificar si ya existe una materia con el mismo nombre
       const allSubjects = await subjectsAPI.fetchAll();
