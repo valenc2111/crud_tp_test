@@ -84,6 +84,49 @@ async function loadSubjects()
     }
 }
 
+//3.0 new
+function setupSubjectFormHandler() {
+  const form = document.getElementById('subjectForm');
+
+  form.addEventListener('submit', async e => {
+    e.preventDefault();
+
+    const subject = {
+      id: document.getElementById('subjectId').value.trim(),
+      name: document.getElementById('name').value.trim()
+    };
+
+    try {
+      // 🔹 1. Verificar si ya existe una materia con el mismo nombre
+      const allSubjects = await subjectsAPI.fetchAll();
+      const alreadyExists = allSubjects.some(
+        s => s.name.toLowerCase() === subject.name.toLowerCase() && s.id !== subject.id
+      );
+
+      if (alreadyExists) {
+        alert('❌ La materia ya existe.');
+        return; // No continúa con la creación/actualización
+      }
+
+      // 🔹 2. Crear o actualizar si no está repetida
+      if (subject.id) {
+        await subjectsAPI.update(subject);
+      } else {
+        await subjectsAPI.create(subject);
+      }
+
+      form.reset();
+      document.getElementById('subjectId').value = '';
+      loadSubjects();
+    } catch (err) {
+      alert(err.message || 'Error al procesar la solicitud.');
+    }
+  });
+}
+
+
+/*
+//ant
 function setupSubjectFormHandler() 
 {
   const form = document.getElementById('subjectForm');
@@ -117,6 +160,8 @@ function setupSubjectFormHandler()
         }
   });
 }
+*/
+
 
 function setupCancelHandler()
 {
